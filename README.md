@@ -79,9 +79,11 @@ O módulo `Funcional1` inclui listas genéricas, registros e campos com tipos co
 * Incluir os módulos WebAPI e WebUI (nova IDE web) ([commit](https://github.com/AugustoSampaio/PLP/pull/25/commits/ca77ecd51e395adb066b3ce01b8471551463e9eb))
 * Adicionar suporte à depuração nas linguagens, expondo o snapshot do ambiente de compilação ([commit](https://github.com/AugustoSampaio/PLP/pull/25/commits/a45521837356525c512ec353389f79b65602bf5a))
 
-## Observações
+## Publicação
 
-* O código disponível do github não tem ligação com o conteúdo da página da disciplina. Assim qualquer contribuição feita no repositório, não irá refletir no conteúdo da página, sendo necessário copiar os resultados para a página após o fim do período. A importância de estar dessa forma é porque assim, caso ocorra problema de conexão (ex.: o cin esteja sem internet), ainda será possível ter acesso ao conteúdo.
+O GitHub Pages desta cópia é atualizado pelo workflow [docs.yml](.github/workflows/docs.yml) quando há alterações em `master`. A publicação compila os interpretadores, executa os testes e gera a documentação e a IDE. O resultado pode ser acompanhado na [aba Actions](https://github.com/CyberNicky/PLP/actions).
+
+O repositório base e o site oficial da disciplina são mantidos pelo professor; esta publicação pertence à conta CyberNicky.
 
 ## Créditos
 
