@@ -1,0 +1,6 @@
+let record Pessoa { nome: String, idade: Int } in
+let var pessoas = [
+    Pessoa { nome: "Monique", idade: 23 },
+    Pessoa { nome: "Bruno", idade: 25 }
+] in
+head(pessoas).idade + head(tail(pessoas)).idade

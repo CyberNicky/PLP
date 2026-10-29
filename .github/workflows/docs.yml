@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - main
       - develop
   workflow_dispatch:
 
@@ -11,6 +12,10 @@ permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -23,6 +28,8 @@ jobs:
       uses: actions/configure-pages@v5
     - name: "Use Common Java Build"
       uses: ./.github/actions/common-java-build
+      with:
+        java_version: '21'
     - name: Copy the classic UI to docs/
       run: |
         cp AppUI/target/classes/index.html docs/interpretador.html
@@ -30,9 +37,11 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
         cache: npm
         cache-dependency-path: WebUI/package-lock.json
+    - name: Test Funcional1 in the generated web runtime
+      run: node WebAPI/test/funcional1-web.cjs
     - name: Build the web IDE (WebUI)
       working-directory: WebUI
       run: |
@@ -43,8 +52,7 @@ jobs:
         fi
         # plp.js is the WebAPI module compiled to JS by TeaVM
         cp -r ../WebAPI/target/javascript/. public/
-        # `npm install` (and not `npm ci`) until package-lock.json is regenerated
-        npm install --no-audit --no-fund
+        npm ci --no-audit --no-fund
         npm run build
     - name: Copy the web IDE to docs/ide/
       run: |

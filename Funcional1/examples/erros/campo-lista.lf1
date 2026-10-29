@@ -1,0 +1,2 @@
+let record Grupo { idades: [Int] } in
+Grupo { idades: [true, false] }

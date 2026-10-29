@@ -127,8 +127,8 @@ public final class PlpWebApi {
 
   private void interpretarFunc1(InputStream fis, String src) throws Exception {
     if (func1DebugParser == null) func1DebugParser = new plp.debug.funcional1.parser.Func1DebugParser(fis);
-    else plp.debug.funcional1.parser.Func1DebugParser.ReInit(fis);
-    lf1.plp.functional1.Programa prog = plp.debug.funcional1.parser.Func1DebugParser.Input();
+    else func1DebugParser.ReInit(fis);
+    lf1.plp.functional1.Programa prog = func1DebugParser.Input();
     message = "sintaxe verificada com sucesso!";
     plp.debug.funcional1.AmbienteCompilacaoDebug ambienteDebug =
         new plp.debug.funcional1.AmbienteCompilacaoDebug(new lf1.plp.expressions2.memory.ContextoCompilacao());

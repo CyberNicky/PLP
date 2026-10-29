@@ -1,0 +1,25 @@
+# arquivo (relativo a examples)\t0=sucesso;1=erro\tvalor ou trecho do diagnóstico
+funcional1/variaveis.lf1	0	25
+funcional1/funcoes.lf1	0	14
+funcional1/fatorial.lf1	0	120
+registros/pessoa.lf1	0	"Monique"
+registros/listas.lf1	0	48
+registros/obter-nome.lf1	0	"Monique"
+registros/contar.lf1	0	2
+registros/somar-idades.lf1	0	48
+registros/imutabilidade.lf1	0	"Monique / Bruno"
+registros/lista-vazia.lf1	0	0
+erros/tipo-campo.lf1	1	Tipo incompatível
+erros/campo-inexistente.lf1	1	Campo inexistente
+erros/lista-heterogenea.lf1	1	mesmo tipo
+erros/argumento-funcao.lf1	1	função 'somarIdades': Tipo incompatível no argumento 1
+erros/head-vazia.lf1	1	lista vazia
+erros/atribuicao-campo.lf1	1	Encountered
+listas/inteiros.lf1	0	6
+listas/textos.lf1	0	"Bruno"
+listas/booleanos.lf1	0	false
+listas/aninhadas.lf1	0	3
+registros/campos-lista.lf1	0	25
+registros/lista-no-registro.lf1	0	48
+erros/lista-tipos-incompativeis.lf1	1	mesmo tipo
+erros/campo-lista.lf1	1	Tipo incompatível no campo 'idades'

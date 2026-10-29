@@ -141,9 +141,9 @@ public class MultiInterpretador {
 		if (func1Parser == null) {
 			func1Parser = new Func1Parser(fis);
 		} else {
-			Func1Parser.ReInit(fis);
+			func1Parser.ReInit(fis);
 		}
-		prog = Func1Parser.Input();
+		prog = func1Parser.Input();
 
 		messageBoard.setText("sintaxe verificada com sucesso!\n");
 		if (prog.checaTipo()) {

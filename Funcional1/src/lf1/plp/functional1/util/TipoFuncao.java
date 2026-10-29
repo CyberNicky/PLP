@@ -1,212 +1,67 @@
-/*
- * Universidade Federal de Pernambuco - UFPE
- * Centro de Inform�tica - CIn
- * 
- * Paradigmas de Linguagem de Programa��o - PLP
- * 
- * Tipo: TipoFuncao
- */
 package lf1.plp.functional1.util;
 
-import static lf1.plp.expressions1.util.ToStringProvider.listToString;
-
-import java.util.Iterator;
-import java.util.List;
-
+import java.util.*;
 import lf1.plp.expressions1.util.Tipo;
 import lf1.plp.expressions2.expression.Expressao;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
-import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
-import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
+import lf1.plp.functional1.extension.ErroExtensao;
 
-/**
- * Esta classe representa o tipo de uma fun��o.
- * 
- * Caso o tipo do dom�nio da fun��o tamb�m seja um objeto dessa classe a fun��o
- * representada por esse objeto � uma fun��o que recebe uma fun��o como
- * par�metro, logo, trata-se de um caso de suporte a fun��es de alta ordem.
- * 
- * Se o tipo da imagem da fun��o tamb�m for um objeto da classe TipoFuncao
- * trata-se de uma fun��o com m�ltiplos par�metros. Assim, o tipo do retorno da
- * fun��o ser� sempre o tipo da imagem do �ltimo objeto dessa classe.
- * 
- * @author Joabe Jesus (jbjj@cin.ufpe.br)
- */
+/** Assinatura monomórfica durante a recursão; esquema instanciado nas demais chamadas. */
 public class TipoFuncao implements Tipo {
+    private final List<Tipo> dominio;
+    private final Tipo imagem;
+    private Set<TipoPolimorfico> quantificadas = Collections.emptySet();
 
-	/**
-	 * O tipo do dom�nio da fun��o.
-	 */
-	private List<Tipo> dominio;
+    public TipoFuncao(List<Tipo> dominio, Tipo imagem) {
+        this.dominio = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(dominio));
+        this.imagem = imagem;
+    }
+    public List<Tipo> getDominio() { return dominio; }
+    public Tipo getImagem() { return imagem; }
+    Set<TipoPolimorfico> quantificadas() { return quantificadas; }
 
-	/**
-	 * O tipo da imagem (o tipo de retorno) da fun��o.
-	 */
-	private Tipo imagem;
+    public void generalizar(Collection<Tipo> ambienteExterno) {
+        Set<TipoPolimorfico> livres = new HashSet<>();
+        dominio.forEach(t -> livres.addAll(Inferencia.livres(t)));
+        livres.addAll(Inferencia.livres(imagem));
+        ambienteExterno.forEach(t -> livres.removeAll(Inferencia.livres(t)));
+        quantificadas = Collections.unmodifiableSet(new HashSet<>(livres));
+    }
 
-	/**
-	 * Construtor da classe que representa um tipo fun��o (T1 x ... x Tn -> T).
-	 * 
-	 * @param dominio
-	 *            A lista dos tipos do dom�nio da fun��o (T1 x ... x Tn).
-	 * @param imagem
-	 *            O tipo da imagem da fun��o (T).
-	 */
-	public TipoFuncao(List<Tipo> dominio, Tipo imagem) {
-		this.dominio = dominio;
-		this.imagem = imagem;
-	}
+    private TipoFuncao instanciar() {
+        Map<TipoPolimorfico, TipoPolimorfico> copias = new IdentityHashMap<>();
+        List<Tipo> params = dominio.stream().map(t -> Inferencia.copiar(t, quantificadas, copias)).collect(java.util.stream.Collectors.toList());
+        return new TipoFuncao(params, Inferencia.copiar(imagem, quantificadas, copias));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see lf1.plp.expressions1.util.Tipo#getNome()
-	 */
-	public String getNome() {
-		return String.format("(%s) -> %s", listToString(dominio, " x"), imagem);
-	}
+    public String getNome() { return dominio + " -> " + imagem; }
+    public String toString() { return getNome(); }
+    public boolean eBooleano() { return false; }
+    public boolean eInteiro() { return false; }
+    public boolean eString() { return false; }
+    public boolean eValido() { return true; }
+    public boolean eIgual(Tipo outro) { return Inferencia.unificar(this, outro); }
+    public Tipo intersecao(Tipo outro) { return eIgual(outro) ? this : null; }
 
-	public List<Tipo> getDominio() {
-		return dominio;
-	}
+    private Tipo aplicar(AmbienteCompilacao amb, List<? extends Expressao> argumentos) {
+        if (dominio.size() != argumentos.size()) throw new ErroExtensao("Quantidade incorreta de argumentos da função.");
+        TipoFuncao chamada = instanciar();
+        for (int i = 0; i < argumentos.size(); i++) {
+            Expressao argumento = argumentos.get(i);
+            if (!argumento.checaTipo(amb)) throw new ErroExtensao("Argumento com tipo inválido.");
+            Tipo real = argumento.getTipo(amb);
+            if (!Inferencia.unificar(chamada.dominio.get(i), real))
+                throw new ErroExtensao("Tipo incompatível no argumento " + (i + 1)
+                    + ": esperado " + chamada.dominio.get(i) + ", recebido " + real);
+        }
+        return Inferencia.resolver(chamada.imagem);
+    }
 
-	public Tipo getImagem() {
-		return imagem;
-	}
-
-	public boolean eBooleano() {
-		return imagem.eBooleano();
-	}
-
-	public boolean eInteiro() {
-		return imagem.eInteiro();
-	}
-
-	public boolean eString() {
-		return imagem.eString();
-	}
-
-	public boolean eValido() {
-		boolean ret = dominio != null;
-		for (Tipo t : this.dominio) {
-			ret &= t.eValido();
-		}
-		ret &= imagem != null && imagem.eValido();
-		return ret;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see lf1.plp.expressions1.util.Tipo#eIgual(lf1.plp.expressions1.util.Tipo)
-	 */
-	public boolean eIgual(Tipo tipo) {
-		boolean ret = true;
-		if (tipo instanceof TipoPolimorfico)
-			return tipo.eIgual(this);
-
-		if (tipo instanceof TipoFuncao) {
-			TipoFuncao tipoFuncao = (TipoFuncao) tipo;
-			if (this.dominio.size() != tipoFuncao.dominio.size())
-				return false;
-			Iterator<Tipo> it = this.dominio.iterator();
-			for (Tipo t : tipoFuncao.dominio) {
-				ret &= t.eIgual(it.next());
-			}
-			return ret && this.imagem.eIgual(tipoFuncao.imagem);
-		}
-
-		return ret;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see lf1.plp.expressions1.util.Tipo#intersecao(lf1.plp.expressions1.util.Tipo)
-	 */
-	public Tipo intersecao(Tipo outroTipo) {
-		if (outroTipo.eIgual(this))
-			return this;
-		else
-			return null;
-	}
-
-	@Override
-	public String toString() {
-		return getNome();
-	}
-
-	/**
-	 * Este m�todo � usado para limpar os tipos curingas, pois ap�s a aplica��o
-	 * os mesmos podem estar instanciados e isto pode influenciar um erro de
-	 * tipos na pr�xima aplica��o.
-	 */
-	private void limparTiposCuringas() {
-		for (Tipo tDom : getDominio()) {
-			if (tDom instanceof TipoPolimorfico) {
-				((TipoPolimorfico) tDom).limpar();
-			}
-
-		}
-		if (getImagem() instanceof TipoPolimorfico) {
-			((TipoPolimorfico) getImagem()).limpar();
-		}
-	}
-
-	private boolean checkArgumentListSize(
-			List<? extends Expressao> parametrosFormais) {
-		return getDominio().size() == parametrosFormais.size();
-	}
-
-	private boolean checkArgumentTypes(AmbienteCompilacao ambiente,
-			List<? extends Expressao> parametrosFormais)
-			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		boolean result = true;
-
-		Iterator<Tipo> it = getDominio().iterator();
-		Tipo tipoArg;
-		for (Expressao valorReal : parametrosFormais) {
-
-			result &= valorReal.checaTipo(ambiente);
-
-			tipoArg = valorReal.getTipo(ambiente);
-			Tipo tipoDom = it.next();
-
-			result &= tipoArg.eIgual(tipoDom);
-		}
-		return result;
-	}
-
-	public boolean checaTipo(AmbienteCompilacao ambiente,
-			List<? extends Expressao> parametrosFormais) {
-		boolean result = checkArgumentListSize(parametrosFormais)
-				&& checkArgumentTypes(ambiente, parametrosFormais);
-		limparTiposCuringas();
-		return result;
-	}
-
-	public Tipo getTipo(AmbienteCompilacao ambiente,
-			List<? extends Expressao> parametrosFormais) {
-		// Infere os par�metros
-		Iterator<Tipo> it = getDominio().iterator();
-		Tipo tipoArg;
-		for (Expressao valorReal : parametrosFormais) {
-			tipoArg = valorReal.getTipo(ambiente);
-			tipoArg.eIgual(it.next());
-		}
-
-		// Obtem o resultado. 
-		Tipo ret = getImagem();
-		// Caso seja um tipo polimorfico procura a mais espec�fica instancia��o.
-		while (ret instanceof TipoPolimorfico) {
-			if (((TipoPolimorfico) ret).getTipoInstanciado() == null) {
-				break;
-			}
-			ret = ((TipoPolimorfico) ret).getTipoInstanciado();
-		}
-
-		limparTiposCuringas();
-		return ret;
-	}
-
+    public boolean checaTipo(AmbienteCompilacao amb, List<? extends Expressao> argumentos) {
+        aplicar(amb, argumentos);
+        return true;
+    }
+    public Tipo getTipo(AmbienteCompilacao amb, List<? extends Expressao> argumentos) {
+        return aplicar(amb, argumentos);
+    }
 }

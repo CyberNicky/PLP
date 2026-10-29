@@ -55,14 +55,15 @@ public class ExpDeclaracao implements Expressao {
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		AmbienteExecucaoFuncional amb = (AmbienteExecucaoFuncional)ambienteFuncional;
 		amb.incrementa();
-		AmbienteExecucaoFuncional aux = new ContextoExecucaoFuncional();
-		aux.incrementa();
-		declaracao.elabora(amb, aux);
-		declaracao.incluir(amb, aux);
-		aux.restaura();
-		Valor vresult = expressao.avaliar(amb);
-		amb.restaura();
-		return vresult;
+		try {
+			AmbienteExecucaoFuncional aux = new ContextoExecucaoFuncional();
+			aux.incrementa();
+			try {
+				declaracao.elabora(amb, aux);
+				declaracao.incluir(amb, aux);
+			} finally { aux.restaura(); }
+			return expressao.avaliar(amb);
+		} finally { amb.restaura(); }
 	}
 
 	/**
@@ -115,14 +116,15 @@ public class ExpDeclaracao implements Expressao {
 	public Tipo getTipo(AmbienteCompilacao ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		ambiente.incrementa();
-		AmbienteCompilacao aux = new ContextoCompilacao();
-		aux.incrementa();
-		declaracao.elabora(ambiente, aux);
-		declaracao.incluir(ambiente, aux);
-		aux.restaura();
-		Tipo vresult = expressao.getTipo(ambiente);
-		ambiente.restaura();
-		return vresult;
+		try {
+			AmbienteCompilacao aux = new ContextoCompilacao();
+			aux.incrementa();
+			try {
+				declaracao.elabora(ambiente, aux);
+				declaracao.incluir(ambiente, aux);
+			} finally { aux.restaura(); }
+			return expressao.getTipo(ambiente);
+		} finally { ambiente.restaura(); }
 	}
 
 	public Expressao reduzir(AmbienteExecucao ambiente) {

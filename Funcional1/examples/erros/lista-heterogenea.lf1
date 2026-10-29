@@ -1,0 +1,3 @@
+let record Pessoa { nome: String, idade: Int } in
+let record Produto { nome: String, preco: Int } in
+[Pessoa { nome: "Monique", idade: 23 }, Produto { nome: "Livro", preco: 40 }]

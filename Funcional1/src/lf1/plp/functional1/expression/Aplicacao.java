@@ -45,18 +45,19 @@ public class Aplicacao implements Expressao {
 		try {
 			funcao = ambienteFuncional.getFuncao(func);
 		} catch (IdentificadorNaoDeclaradoException e) {
-			throw new VariavelJaDeclaradaException(func);
+			throw new VariavelNaoDeclaradaException(func);
 		}
 
 		Map<Id, Valor> mapIdValor = resolveParametersBindings(ambiente, funcao);
 
 		ambiente.incrementa();
 
-		includeValueBindings(ambiente, mapIdValor);
-
-		Valor vresult = funcao.getExp().avaliar(ambiente);
-		ambiente.restaura();
-		return vresult;
+		try {
+			includeValueBindings(ambiente, mapIdValor);
+			return funcao.getExp().avaliar(ambiente);
+		} finally {
+			ambiente.restaura();
+		}
 	}
 
 	/**

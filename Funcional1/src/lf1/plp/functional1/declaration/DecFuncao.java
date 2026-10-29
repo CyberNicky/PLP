@@ -2,21 +2,16 @@ package lf1.plp.functional1.declaration;
 
 import static lf1.plp.expressions1.util.ToStringProvider.listToString;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import lf1.plp.expressions1.util.Tipo;
 import lf1.plp.expressions2.expression.Expressao;
 import lf1.plp.expressions2.expression.Id;
-import lf1.plp.expressions2.expression.Valor;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import lf1.plp.functional1.memory.AmbienteExecucaoFuncional;
 import lf1.plp.functional1.util.DefFuncao;
-import lf1.plp.functional1.util.TipoFuncao;
-import lf1.plp.functional1.util.TipoPolimorfico;
 
 public class DecFuncao implements DeclaracaoFuncional {
 
@@ -25,8 +20,12 @@ public class DecFuncao implements DeclaracaoFuncional {
 	private DefFuncao funcao;
 
 	public DecFuncao(Id idFun, List<Id> argsId, Expressao exp) {
+		this(idFun, new DefFuncao(argsId, exp));
+	}
+
+	protected DecFuncao(Id idFun, DefFuncao funcao) {
 		this.id = idFun;
-		this.funcao = new DefFuncao(argsId, exp);
+		this.funcao = funcao;
 	}
 
 	public Id getId() {
@@ -80,19 +79,8 @@ public class DecFuncao implements DeclaracaoFuncional {
 	 */
 	public boolean checaTipo(AmbienteCompilacao ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		ambiente.incrementa();
-
-		List<Tipo> params = new ArrayList<Tipo>(getAridade());
-		for (int i = 0; i < getAridade(); i++) {
-			params.add(new TipoPolimorfico());
-		}
-		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
-		// Mapeia a pr�pria fun��o no ambiente para permitir recurs�o.
-		ambiente.map(id, tipo);
-
-		boolean result = funcao.checaTipo(ambiente);
-		ambiente.restaura();
-		return result;
+		funcao.inferir(ambiente, id);
+		return true;
 	}
 
 	/**
@@ -112,18 +100,7 @@ public class DecFuncao implements DeclaracaoFuncional {
 	 */
 	public Tipo getTipo(AmbienteCompilacao amb)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		amb.incrementa();
-
-		List<Tipo> params = new ArrayList<Tipo>(getAridade());
-		for (int i = 0; i < getAridade(); i++) {
-			params.add(new TipoPolimorfico());
-		}
-		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
-		amb.map(id, tipo);
-
-		Tipo result = funcao.getTipo(amb);
-		amb.restaura();
-		return result;
+		return funcao.inferir(amb, id);
 	}
 
 	public DecFuncao clone() {

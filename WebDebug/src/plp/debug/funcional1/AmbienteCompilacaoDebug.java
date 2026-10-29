@@ -11,7 +11,7 @@ import plp.debug.core.SnapshotRecorder;
 
 /**
  * Implementa {@link AmbienteCompilacao} delegando todas as chamadas a um
- * ambiente real, sem alterar Funcional1. Observa incrementa()/restaura()/
+ * ambiente real, preservando as regras de Funcional1. Observa incrementa()/restaura()/
  * map() para alimentar um {@link SnapshotRecorder}.
  */
 public class AmbienteCompilacaoDebug implements AmbienteCompilacao, ScopeAware {
@@ -59,4 +59,7 @@ public class AmbienteCompilacaoDebug implements AmbienteCompilacao, ScopeAware {
 	public Tipo get(Id idArg) throws VariavelNaoDeclaradaException {
 		return target.get(idArg);
 	}
+    @Override public java.util.Collection<Tipo> tiposVisiveis() {
+        return target.tiposVisiveis();
+    }
 }

@@ -1,0 +1,3 @@
+let record Pessoa { nome: String, idade: Int } in
+let fun obterNome pessoa = pessoa.nome in
+obterNome(Pessoa { nome: "Monique", idade: 23 })

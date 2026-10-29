@@ -1,22 +1,7 @@
-/*
- * CÓPIA DE GRAMÁTICA — NÃO É A GRAMÁTICA DA LINGUAGEM.
- *
- * Espelha: Funcional1/src/lf1/plp/functional1/parser/Functional1.jj
- *
- * Esta cópia existe apenas para o debugger da WebAPI: suas ações constroem
- * subclasses *Debug (em plp.debug.*) que carregam a faixa exata de
- * código-fonte (InfoEscopo/TrechoCodigoFonte) do escopo. A gramática da
- * linguagem permanece intocada.
- *
- * ATENÇÃO: se a gramática da linguagem acima mudar (novos tokens, produções
- * ou sintaxe), esta cópia precisa ser atualizada manualmente, senão o
- * debugger passa a divergir silenciosamente da linguagem. As únicas
- * diferenças intencionais em relação ao original são: package, nome da classe
- * do parser (sufixo Debug), imports de plp.debug.*, capturas de Token para as
- * faixas, e as chamadas de construtor apontando para as subclasses *Debug.
- */
+/* Debug mirror of Funcional1 grammar, with source-scope metadata. */
 options
 {
+  STATIC = false;
   //  LOOKAHEAD = 6;
   //  FORCE_LA_CHECK = true;
   JAVA_UNICODE_ESCAPE = true;
@@ -33,6 +18,14 @@ import lf1.plp.functional1.expression.ExpDeclaracao;
 import lf1.plp.functional1.expression.IfThenElse;
 import lf1.plp.functional1.expression.Aplicacao;
 import java.util.*;
+import plp.debug.core.InfoEscopo;
+import plp.debug.core.TrechoCodigoFonte;
+import plp.debug.funcional1.ExpDeclaracaoDebug;
+import plp.debug.funcional1.DecFuncaoDebug;
+import plp.debug.funcional1.ExpDeclaracaoRegistroDebug;
+import lf1.plp.functional1.extension.*;
+import lf1.plp.expressions1.util.Tipo;
+import lf1.plp.expressions1.util.TipoPrimitivo;
 import lf1.plp.expressions2.expression.ExpAnd;
 import lf1.plp.expressions2.expression.ExpConcat;
 import lf1.plp.expressions2.expression.ExpEquals;
@@ -48,83 +41,20 @@ import lf1.plp.expressions2.expression.Valor;
 import lf1.plp.expressions2.expression.ValorBooleano;
 import lf1.plp.expressions2.expression.ValorInteiro;
 import lf1.plp.expressions2.expression.ValorString;
-import plp.debug.core.InfoEscopo;
-import plp.debug.core.TrechoCodigoFonte;
-import plp.debug.funcional1.ExpDeclaracaoDebug;
-import plp.debug.funcional1.DecFuncaoDebug;
 
 public class Func1DebugParser
 {
-  public static void main(String args [])
-  {
-    Func1DebugParser parser;
-    if (args.length == 0)
-    {
-      System.out.println("Funcional 1 PLP Parser Version 0.0.1:  Reading from standard input . . .");
-      parser = new Func1DebugParser(System.in);
-    }
-    else if (args.length == 1)
-    {
-      System.out.println("Funcional 1 PLP Parser Version 0.0.1:  Reading from file " + args [0] + " . . .");
-      try
-      {
-        parser = new Func1DebugParser(new java.io.FileInputStream(args [0]));
-      }
-      catch (java.io.FileNotFoundException e)
-      {
-        System.out.println("Funcional 1 PLP Parser Version 0.0.1:  File " + args [0] + " not found.");
-        return;
-      }
-    }
-    else
-    {
-      System.out.println("Funcional 1 PLP Parser Version 0.0.1:  Usage is one of:");
-      System.out.println("         java Func1DebugParser < inputfile");
-      System.out.println("OR");
-      System.out.println("         java Func1DebugParser inputfile");
-      return;
-    }
-    Programa programa = null;
-    try
-    {
-      programa = parser.Input();
-      if (!programa.checaTipo())
- 	  {
- 	    System.out.println("Funcional 1 PLP Parser Version 0.0.1: Erro de tipo.");
-      	System.exit(0);
-      }
-      System.out.println("Funcional 1 PLP Parser Version 0.0.1: Funcional1 program parsed successfully.");
-    }
-    catch (ParseException e)
-    {
-      e.printStackTrace();
-      System.out.println("Funcional 1 PLP Parser Version 0.0.1: Encountered errors during parse.");
-      System.exit(0);
-    }
-    try
-    {
-      System.out.println("Funcional 1 PLP Parser Version 0.0.1: running...");
-      Valor val = programa.executar();
-      if (val instanceof ValorString)
-      {
-        ValorString valStr = (ValorString) val;
-        System.out.println("Funcional 1 PLP Parser Version 0.0.1: resultado=" + valStr.valor());
-      }
-      else if (val instanceof ValorInteiro)
-      {
-        ValorInteiro valInt = (ValorInteiro) val;
-        System.out.println("Funcional 1 PLP Parser Version 0.0.1: resultado=" + valInt.valor());
-      }
-      else if (val instanceof ValorBooleano)
-      {
-        ValorBooleano valBool = (ValorBooleano) val;
-        System.out.println("Funcional 1 PLP Parser Version 0.0.1: resultado=" + valBool.valor());
-      }
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-      System.out.println("Funcional 1 PLP Parser Version 0.0.1:  Encountered errors during execution.");
+  public static void main(String[] args) {
+    try {
+      java.io.InputStream entrada = args.length == 0 ? System.in : new java.io.FileInputStream(args[0]);
+      try {
+        Programa programa = new Func1DebugParser(entrada).Input();
+        if (!programa.checaTipo()) throw new ErroExtensao("Erro de tipo.");
+        System.out.println(programa.executar());
+      } finally { if (entrada != System.in) entrada.close(); }
+    } catch (Exception erro) {
+      System.err.println(erro.getMessage());
+      System.exit(1);
     }
   }
 }
@@ -186,6 +116,10 @@ TOKEN : /* TOKENS DE FUNCIONAL 1 */
 | < THEN : "then" >
 | < ELSE : "else" >
 | < FUNC : "fun" >
+| < RECORD : "record" >
+| < HEAD : "head" >
+| < TAIL : "tail" >
+| < IS_EMPTY : "isEmpty" >
 }
 
 TOKEN : /* LITERALS */
@@ -387,17 +321,85 @@ Expressao PExpLength() :
 Expressao PExpPrimaria() :
 {
   Expressao retorno;
+  Token campo;
 }
 {
   (
-    retorno = PValor()
+    LOOKAHEAD(< IDENTIFIER > < LBRACE >) retorno = PRegistro()
+  | LOOKAHEAD(< IDENTIFIER > < LPAREN >) retorno = PAplicacao()
+  | retorno = POperacaoLista()
+  | retorno = PLista()
+  | retorno = PValor()
   | retorno = PId()
   | < LPAREN > retorno = PExpressao() < RPAREN >
   )
+  ( < DOT > campo = < IDENTIFIER > { retorno = new ExpressaoLocalizada(new ExpCampo(retorno, campo.image), campo.beginLine, campo.beginColumn, null); } )*
+  { return retorno; }
+}
+
+Expressao PRegistro() :
+{
+  Token nome, campo;
+  Expressao valor;
+  Map<String, Expressao> campos = new LinkedHashMap<String, Expressao>();
+}
+{
+  nome = < IDENTIFIER > < LBRACE >
+  [
+    campo = < IDENTIFIER > < COLON > valor = PExpressao()
+    { campos.put(campo.image, new ExpressaoLocalizada(valor, campo.beginLine, campo.beginColumn, null)); }
+    ( < COMMA > campo = < IDENTIFIER > < COLON > valor = PExpressao()
+      { if (campos.put(campo.image, new ExpressaoLocalizada(valor, campo.beginLine, campo.beginColumn, null)) != null) throw new ParseException("Linha " + campo.beginLine + ", coluna " + campo.beginColumn + ": campo repetido: " + campo.image); }
+    )*
+  ]
+  < RBRACE >
+  { return new ExpressaoLocalizada(new ExpRegistro(nome.image, campos), nome.beginLine, nome.beginColumn, null); }
+}
+
+Expressao PLista() :
+{
+  Token inicio;
+  Expressao valor;
+  List<Expressao> elementos = new ArrayList<Expressao>();
+}
+{
+  inicio = < LBRACKET >
+  [ valor = PExpressao() { elementos.add(valor); }
+    ( < COMMA > valor = PExpressao() { elementos.add(valor); } )* ]
+  < RBRACKET >
+  { return new ExpressaoLocalizada(new ExpLista(elementos), inicio.beginLine, inicio.beginColumn, null); }
+}
+
+Expressao PDeclaracaoRegistro() :
+{
+  Token nome, campo, inicio, fim;
+  Tipo tipo;
+  Expressao corpo;
+  Map<String, Tipo> campos = new LinkedHashMap<String, Tipo>();
+}
+{
+  inicio = < LET > < RECORD > nome = < IDENTIFIER > < LBRACE >
+  [ campo = < IDENTIFIER > < COLON > tipo = PTipoCampo()
+    { campos.put(campo.image, tipo); }
+    ( < COMMA > campo = < IDENTIFIER > < COLON > tipo = PTipoCampo()
+      { if (campos.put(campo.image, tipo) != null) throw new ParseException("Linha " + campo.beginLine + ", coluna " + campo.beginColumn + ": campo repetido: " + campo.image); }
+    )* ]
+  < RBRACE > fim = < IN > corpo = PExpressao()
+  { return new ExpressaoLocalizada(new ExpDeclaracaoRegistroDebug(new TipoRegistro(nome.image, campos), corpo, new InfoEscopo(new TrechoCodigoFonte(inicio.beginLine, inicio.beginColumn, fim.endLine, fim.endColumn), "record", nome.image)), nome.beginLine, nome.beginColumn, null); }
+}
+
+Tipo PTipoCampo() :
+{ Token tipo; Tipo elemento; }
+{
+  tipo = < IDENTIFIER >
   {
-    //System.out.println("PExpPrimaria=" + retorno);
-    return retorno;
+    if (tipo.image.equals("Int")) return TipoPrimitivo.INTEIRO;
+    if (tipo.image.equals("String")) return TipoPrimitivo.STRING;
+    if (tipo.image.equals("Boolean")) return TipoPrimitivo.BOOLEANO;
+    return new TipoNomeado(tipo.image, tipo.beginLine, tipo.beginColumn);
   }
+| < LBRACKET > elemento = PTipoCampo() < RBRACKET >
+  { return new TipoLista(elemento); }
 }
 
 List PListaId() :
@@ -522,12 +524,14 @@ Expressao PExpCondicional() :
 
 Expressao PAplicacao() :
 {
+  Token inicio;
   List expressoes = null;
   Expressao expressao;
   Id id;
 }
 {
   (
+    { inicio = getToken(1); }
     id = PId() < LPAREN > expressao = PExpressao()
     {
       expressoes = new ArrayList();
@@ -542,7 +546,7 @@ Expressao PAplicacao() :
     < RPAREN >
   )
   {
-    return new Aplicacao(id, expressoes);
+    return new ExpressaoLocalizada(new Aplicacao(id, expressoes), inicio.beginLine, inicio.beginColumn, "função '" + id + "'");
   }
 }
 
@@ -558,12 +562,12 @@ Expressao PExpUnaria() :
     retorno = PExpNot()
   | LOOKAHEAD(PExpLength())
     retorno = PExpLength()
+  | LOOKAHEAD(< LET > < RECORD >)
+    retorno = PDeclaracaoRegistro()
   | LOOKAHEAD(PExpDeclaracao())
     retorno = PExpDeclaracao()
   | LOOKAHEAD(PExpCondicional())
     retorno = PExpCondicional()
-  | LOOKAHEAD(PId() < LPAREN >)
-    retorno = PAplicacao()
   | LOOKAHEAD(PExpPrimaria())
     retorno = PExpPrimaria()
   )
@@ -663,4 +667,18 @@ Programa PPrograma() :
     //System.out.println("Expressao=" + retorno);
     return new Programa(retorno);
   }
+}
+
+Expressao POperacaoLista() :
+{
+  ExpOperacaoLista.Operacao op;
+  Token inicio;
+  Expressao argumento;
+}
+{
+  ( inicio = < HEAD > { op = ExpOperacaoLista.Operacao.HEAD; }
+  | inicio = < TAIL > { op = ExpOperacaoLista.Operacao.TAIL; }
+  | inicio = < IS_EMPTY > { op = ExpOperacaoLista.Operacao.IS_EMPTY; } )
+  < LPAREN > argumento = PExpressao() < RPAREN >
+  { return new ExpressaoLocalizada(new ExpOperacaoLista(op, argumento), inicio.beginLine, inicio.beginColumn, null); }
 }

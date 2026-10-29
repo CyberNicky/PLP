@@ -1,6 +1,12 @@
-# Paradigmas de Linguagens de Programação
+# PLP — Registros e Listas na Funcional 1
 
-Repositório do projeto da disciplina Paradigmas de Linguagens de Programação ([in1007](https://www.cin.ufpe.br/~in1007/)) da pós-graduação em Ciência da Computação da UFPE, ministrada pelo Prof.Dr. Augusto Sampaio.
+Extensão de Funcional1 integrada ao [projeto base do professor](https://github.com/AugustoSampaio/PLP), com registros, listas genéricas e execução na IDE web.
+
+- [IDE web](https://cybernicky.github.io/PLP/ide/) — selecione **Func1**.
+- [Gramática e exemplos](https://cybernicky.github.io/PLP/linguagens/funcional1).
+- [Guia de execução e testes](Funcional1/README.md).
+
+Baseado no repositório da disciplina Paradigmas de Linguagens de Programação ([in1007](https://www.cin.ufpe.br/~in1007/)) da pós-graduação em Ciência da Computação da UFPE, ministrada pelo Prof.Dr. Augusto Sampaio.
 
 ## Estrutura
 
@@ -16,8 +22,8 @@ Repositório do projeto da disciplina Paradigmas de Linguagens de Programação 
 Ambas as interfaces são publicadas automaticamente pelo workflow
 [`docs.yml`](.github/workflows/docs.yml):
 
-* IDE web: <https://augustosampaio.github.io/PLP/ide/>
-* Interpretador clássico: <https://augustosampaio.github.io/PLP/interpretador.html>
+* IDE web: <https://cybernicky.github.io/PLP/ide/>
+* Interpretador clássico: <https://cybernicky.github.io/PLP/interpretador.html>
 
 ## Execução
 
@@ -50,6 +56,10 @@ npm install
 npm start
 # compila o WebAPI com TeaVM e sobe a IDE em http://localhost:4004
 ```
+
+## Extensão de Funcional1: registros e listas
+
+O módulo `Funcional1` inclui listas genéricas, registros e campos com tipos compostos, com execução na IDE web ao selecionar **Func1**. O [guia da extensão](Funcional1/README.md) reúne a gramática clicável, decisões de implementação, exemplos e comandos de testes.
 
 ## Contribuições
 

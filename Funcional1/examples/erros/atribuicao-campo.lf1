@@ -1,0 +1,3 @@
+let record Pessoa { nome: String, idade: Int } in
+let var pessoa = Pessoa { nome: "Monique", idade: 23 } in
+pessoa.idade = 99

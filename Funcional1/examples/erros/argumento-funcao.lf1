@@ -1,0 +1,5 @@
+let record Pessoa { nome: String, idade: Boolean } in
+let fun somarIdades pessoas =
+    if isEmpty(pessoas) then 0
+    else head(pessoas).idade + somarIdades(tail(pessoas))
+in somarIdades([Pessoa { nome: "Monique", idade: true }])

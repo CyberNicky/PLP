@@ -1,0 +1,11 @@
+let record Grupo {
+    nomes: [String],
+    idades: [Int],
+    ativos: [Boolean]
+} in
+let var grupo = Grupo {
+    nomes: ["Monique", "Bruno"],
+    idades: [23, 25],
+    ativos: [true, false]
+} in
+head(tail(grupo.idades))

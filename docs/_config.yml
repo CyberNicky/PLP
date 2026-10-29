@@ -18,13 +18,12 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Paradigmas de Linguagens de Programação
+title: "PLP — Registros e Listas"
 
-author: Prof. Augusto Sampaio
-email: acas@cin.ufpe.br
-description: "IN1007 - Centro de Informática - UFPE"
+author: Monique
+description: "Extensão da Funcional 1 — projeto baseado no PLP do Prof. Augusto Sampaio, CIn/UFPE"
 baseurl: "/PLP" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://cybernicky.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Build settings
 theme: minima

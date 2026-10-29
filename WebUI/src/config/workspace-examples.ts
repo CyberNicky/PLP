@@ -15,11 +15,13 @@ const WORKSPACE_EXAMPLES: Record<string, WorkspaceExample> = {
         in a+b`,
   },
   Func1: {
-    markdown: "# Funcional 1\n\nExample notebook for the first functional language.",
-    code: `let fun fat n =
-        let fun mult x y = if (x == 0) then (0) else (y + (mult((x - 1),y)))
-        in if (n == 0) then (1) else (mult(n,(fat (n - 1))))
-    in fat(5)`,
+    markdown: "# Funcional 1 — registros e listas\n\nUm registro pode conter listas; uma lista pode conter registros. Este exemplo soma as primeiras notas de duas pessoas. Resultado esperado: 17.",
+    code: `let record Pessoa { nome: String, notas: [Int] } in
+let var turma = [
+    Pessoa { nome: "Monique", notas: [8, 10] },
+    Pessoa { nome: "Bruno", notas: [9, 7] }
+] in
+head(head(turma).notas) + head(head(tail(turma)).notas)`,
   },
   Func2: {
     markdown: "# Funcional 2\n\nExample notebook for the second functional language.",

@@ -7,18 +7,15 @@ import lf1.plp.expressions1.util.Tipo;
 import lf1.plp.expressions2.expression.Expressao;
 import lf1.plp.expressions2.expression.Id;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
-import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import lf1.plp.functional1.util.DefFuncao;
-import lf1.plp.functional1.util.TipoFuncao;
-import lf1.plp.functional1.util.TipoPolimorfico;
 import plp.debug.core.InfoEscopo;
 import plp.debug.core.ScopeAware;
 
 /**
  * Estende {@link DefFuncao} publicando o escopo da função (onde os parâmetros
  * formais são vinculados) com a faixa exata de código-fonte capturada pelo
- * parser do WebDebug. Funcional1 permanece inalterada.
+ * parser do WebDebug. A inferência é herdada de Funcional1.
  */
 public class DefFuncaoDebug extends DefFuncao {
 
@@ -56,51 +53,12 @@ public class DefFuncaoDebug extends DefFuncao {
 		}
 	}
 
-	@Override
-	public boolean checaTipo(AmbienteCompilacao ambiente)
-			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		ambiente.incrementa();
-		registra(ambiente);
-
-		for (Id id : argsId) {
-			ambiente.map(id, new TipoPolimorfico());
-		}
-
-		boolean result = exp.checaTipo(ambiente);
-
-		refinaParametros(ambiente);
-		ambiente.restaura();
-
-		return result;
-	}
-
-	@Override
-	public Tipo getTipo(AmbienteCompilacao ambiente)
-			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		ambiente.incrementa();
-		registra(ambiente);
-
-		for (Id id : argsId) {
-			ambiente.map(id, new TipoPolimorfico());
-		}
-
-		exp.checaTipo(ambiente);
-
-		Tipo result = exp.getTipo(ambiente);
-
-		List<Tipo> params = new ArrayList<Tipo>(getAridade());
-		Tipo argTipo;
-		for (int i = 0; i < getAridade(); i++) {
-			argTipo = ((TipoPolimorfico) ambiente.get(argsId.get(i))).inferir();
-			params.add(argTipo);
-		}
-		result = new TipoFuncao(params, result);
-
-		refinaParametros(ambiente);
-		ambiente.restaura();
-
-		return result;
-	}
+    @Override protected void aoAbrirParametros(AmbienteCompilacao ambiente) {
+        registra(ambiente);
+    }
+    @Override protected void aposVerificarCorpo(AmbienteCompilacao ambiente) {
+        refinaParametros(ambiente);
+    }
 
 	@Override
 	public DefFuncaoDebug clone() {

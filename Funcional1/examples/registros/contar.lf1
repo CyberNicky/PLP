@@ -1,0 +1,8 @@
+let record Pessoa { nome: String, idade: Int } in
+let fun contar pessoas =
+    if isEmpty(pessoas) then 0 else 1 + contar(tail(pessoas))
+in
+contar([
+    Pessoa { nome: "Monique", idade: 23 },
+    Pessoa { nome: "Bruno", idade: 25 }
+])
