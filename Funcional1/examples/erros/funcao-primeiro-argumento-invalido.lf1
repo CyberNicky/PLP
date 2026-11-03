@@ -1,0 +1,2 @@
+let fun primeiro xs = head(xs) in
+primeiro(10)

@@ -1,0 +1,6 @@
+let record Endereco { cidade: String } in
+let record Pessoa { nome: String, endereco: Endereco } in
+Pessoa {
+    nome: "Monique",
+    endereco: Endereco { cidade: "Recife" }
+}.endereco.cidade

@@ -1,0 +1,4 @@
+let fun somar xs =
+    if isEmpty(xs) then 0
+    else head(xs) + somar(tail(xs))
+in somar([2, 4, 6])

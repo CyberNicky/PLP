@@ -1,0 +1,7 @@
+let record Pessoa { nome: String, idade: Int } in
+let record Turma { alunos: [Pessoa] } in
+let var turma = Turma { alunos: [
+    Pessoa { nome: "Monique", idade: 23 },
+    Pessoa { nome: "Bruno", idade: 25 }
+] } in
+head(turma.alunos).nome

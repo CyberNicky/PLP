@@ -1,0 +1,2 @@
+let record Pessoa { idade: Int } in
+Pessoa { idade: 23, ativa: true }

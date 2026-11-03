@@ -1,0 +1,3 @@
+let record Pessoa { idade: Int } in
+let record Aluno { idade: Int } in
+[Pessoa { idade: 23 }, Aluno { idade: 25 }]

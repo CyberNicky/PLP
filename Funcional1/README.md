@@ -113,7 +113,7 @@ mvn -pl Funcional1 -am test
 # Todos os testes necessários à IDE e geração do JavaScript
 mvn -pl WebAPI -am clean verify
 
-# Os 24 exemplos pelo JavaScript real usado pela IDE
+# Os 46 exemplos pelo JavaScript real usado pela IDE
 node WebAPI/test/funcional1-web.cjs
 
 # Compilação da interface
@@ -133,7 +133,7 @@ mvn -pl Funcional1 -Dtest=ChecagemExtensaoTest test
 
 As classes cobrem, respectivamente: listas de diferentes tipos e listas aninhadas; construção e acesso a registros; restrições e chamadas de funções; comportamento original de Funcional1; propagação de falhas da checagem sem avaliar expressões. Os testes de [RegistrosListasWebDebugTest](../WebDebug/test/plp/debug/funcional1/RegistrosListasWebDebugTest.java) comparam os dois parsers, verificam os exemplos inválidos, os escopos e a reutilização do parser pela IDE.
 
-Os [exemplos](examples) incluem 16 programas válidos e 8 casos de erro. [resultados.tsv](examples/resultados.tsv) registra o resultado ou o diagnóstico esperado pela API web. O teste JavaScript usa essa tabela e também confirma que uma chamada inválida não impede a execução seguinte.
+Os [exemplos](examples) incluem 24 programas válidos e 22 casos de erro. [resultados.tsv](examples/resultados.tsv) registra o resultado ou o diagnóstico esperado pela API web. O teste JavaScript usa essa tabela e também confirma que uma chamada inválida não impede a execução seguinte.
 
 Para executar um arquivo sem a IDE, após compilar `Funcional1`:
 

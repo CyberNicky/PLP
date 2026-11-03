@@ -1,0 +1,1 @@
+head([true, false]) and not head(tail([true, false]))

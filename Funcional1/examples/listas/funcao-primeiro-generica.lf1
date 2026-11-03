@@ -1,0 +1,4 @@
+let fun primeiro xs = head(xs) in
+if primeiro([true, false])
+then primeiro([10, 20])
+else 0

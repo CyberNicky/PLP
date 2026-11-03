@@ -1,0 +1,2 @@
+let record Pessoa { nome: String, idade: Int } in
+Pessoa { idade: 20 + 3, nome: "Mo" ++ "nique" }.idade

@@ -23,3 +23,25 @@ registros/campos-lista.lf1	0	25
 registros/lista-no-registro.lf1	0	48
 erros/lista-tipos-incompativeis.lf1	1	mesmo tipo
 erros/campo-lista.lf1	1	Tipo incompatível no campo 'idades'
+listas/somar-recursivamente.lf1	0	12
+listas/segundo-texto.lf1	0	"Bia"
+listas/operacoes-booleanas.lf1	0	true
+listas/esvaziar-lista.lf1	0	true
+registros/campos-fora-de-ordem.lf1	0	23
+registros/registro-aninhado.lf1	0	"Recife"
+registros/turma-com-alunos.lf1	0	"Monique"
+listas/funcao-primeiro-generica.lf1	0	10
+erros/campo-obrigatorio-ausente.lf1	1	Campos incorretos
+erros/campo-extra.lf1	1	Campos incorretos
+erros/tipo-registro-nao-declarado.lf1	1	Tipo de registro não declarado: Pessoa
+erros/tipo-de-campo-nao-declarado.lf1	1	Tipo de registro não declarado: Endereco
+erros/registros-nominais-distintos.lf1	1	mesmo tipo
+erros/head-nao-lista.lf1	1	Operação de lista exige uma lista
+erros/tail-nao-lista.lf1	1	Operação de lista exige uma lista
+erros/isempty-nao-lista.lf1	1	Operação de lista exige uma lista
+erros/funcao-primeiro-argumento-invalido.lf1	1	Tipo incompatível no argumento 1
+erros/tail-vazia.lf1	1	tail não pode ser aplicado a uma lista vazia
+erros/declaracao-campo-repetido.lf1	1	campo repetido: idade
+erros/construcao-campo-repetido.lf1	1	campo repetido: idade
+erros/lista-sem-fechamento.lf1	1	Encountered
+erros/ramos-com-listas-incompativeis.lf1	1	erro de tipos
