@@ -214,8 +214,6 @@ A inferência de funções propaga as restrições de campos e elementos de list
 <a id="exemplos-validos"></a>
 ## Exemplos essenciais — 5 programas válidos
 
-Esta seleção reúne **10 programas: 5 válidos e 5 com erro**. Use os números para acompanhar a demonstração. Cada programa é independente e deve ser executado inteiro em uma célula de **Func1**.
-
 ### 1. Lista de registros com campos que contêm listas
 
 ```text
