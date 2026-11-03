@@ -16,7 +16,7 @@ order: 3
 
 **Acesso rápido:** [checaTipo e código](#checa-tipo) · [Gramática acrescentada](#gramatica-da-extensao) · [Exemplos válidos](#exemplos-validos) · [Erros de tipo](#erros-de-tipo) · [Erros de sintaxe](#erros-de-sintaxe) · [Erros de execução](#erros-de-execucao).
 
-Para testar, abra a [IDE web]({{ site.baseurl }}/ide/), selecione **Func1**, cole um programa completo na célula e pressione **Shift + Enter** ou clique em **Run**. As declarações de um exemplo precisam estar na mesma célula que seu uso. Cada exemplo abaixo informa o resultado ou diagnóstico esperado.
+Para testar, abra a [IDE web]({{ site.baseurl }}/ide/), selecione **Func1**, cole um programa completo na célula e pressione **Shift + Enter** ou clique em **Run**. As declarações de um exemplo precisam estar na mesma célula que seu uso. A seleção ao final contém 10 programas, com resultado ou diagnóstico esperado.
 
 <style>
 /* Mantém o código de checaTipo legível também em telas estreitas. */
@@ -172,10 +172,6 @@ IfThenElse ::= "if" Expressao "then" Expressao "else" Expressao
 {% include code-link.html path="Funcional1/src/lf1/plp/functional1/memory/ContextoFuncional.java" %}\
 {% include code-link.html path="Funcional1/src/lf1/plp/functional1/memory/ContextoExecucaoFuncional.java" %}
 
-## Exemplos de Programas
-
-{% include code-link.html path="Funcional1/examples/funcional1/fatorial.lf1" %}
-
 ## Parser
 
 {% include code-link.html path="Funcional1/src/lf1/plp/functional1/parser/Functional1.jj" %}
@@ -214,11 +210,11 @@ Uma lista aceita qualquer tipo de dado da linguagem, mantendo elementos de tipos
 A inferência de funções propaga as restrições de campos e elementos de listas. O parser do WebDebug usa as mesmas classes de Funcional1 e acrescenta informações de escopo para a IDE. O guia completo e os comandos de teste estão no `Funcional1/README.md` do repositório.
 
 <a id="exemplos-validos"></a>
-## Exemplos válidos
+## Exemplos essenciais — 5 programas válidos
 
-Nos exemplos aceitos, `checaTipo` aprova o programa e a IDE mostra o resultado de sua avaliação. As aspas nas saídas de texto fazem parte da representação usada pelo interpretador.
+Esta seleção reúne **10 programas: 5 válidos e 5 com erro**. Use os números para acompanhar a demonstração. Cada programa é independente e deve ser executado inteiro em uma célula de **Func1**.
 
-### Lista de registros com campos que contêm listas
+### 1. Lista de registros com campos que contêm listas
 
 ```text
 let record Pessoa { nome: String, notas: [Int] } in
@@ -231,7 +227,9 @@ head(head(turma).notas) + head(head(tail(turma)).notas)
 
 **Saída esperada:** `17`.
 
-### Lista aninhada
+Demonstra registros dentro de uma lista, campos [Int], acesso a campos, head e tail na mesma expressão.
+
+### 2. Lista aninhada
 
 ```text
 head(head([[1, 2], [3, 4]]))
@@ -239,7 +237,9 @@ head(head([[1, 2], [3, 4]]))
 
 **Saída esperada:** `1`.
 
-### Função que recebe lista de registros
+Mostra que os elementos de uma lista também podem ser listas.
+
+### 3. Função que recebe lista de registros
 
 ```text
 let record Pessoa { idade: Int } in
@@ -251,71 +251,9 @@ in somar([Pessoa { idade: 23 }, Pessoa { idade: 25 }])
 
 **Saída esperada:** `48`.
 
-### Somar uma lista de inteiros com recursão
+Combina funções, recursão, isEmpty, head, tail e acesso a campos de registros.
 
-```text
-let fun somar xs =
-    if isEmpty(xs) then 0
-    else head(xs) + somar(tail(xs))
-in somar([2, 4, 6])
-```
-
-**Saída esperada:** `12`.
-
-A função percorre a lista até encontrar a lista vazia. Cada elemento precisa ser inteiro para participar da soma.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/listas/somar-recursivamente.lf1).
-
-### Combinar head e tail em uma lista de textos
-
-```text
-head(tail(["Ana", "Bia", "Cris"]))
-```
-
-**Saída esperada:** `"Bia"`.
-
-tail devolve a lista sem o primeiro elemento; head seleciona o primeiro elemento dessa nova lista.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/listas/segundo-texto.lf1).
-
-### Usar elementos booleanos em uma expressão lógica
-
-```text
-head([true, false]) and not head(tail([true, false]))
-```
-
-**Saída esperada:** `true`.
-
-As operações de lista preservam o tipo Boolean dos elementos, permitindo usar and e not.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/listas/operacoes-booleanas.lf1).
-
-### Reconhecer a lista vazia após tail
-
-```text
-isEmpty(tail([7]))
-```
-
-**Saída esperada:** `true`.
-
-tail de uma lista com um elemento devolve []; isEmpty testa essa lista sem acessar elementos.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/listas/esvaziar-lista.lf1).
-
-### Informar campos em outra ordem e usar expressões
-
-```text
-let record Pessoa { nome: String, idade: Int } in
-Pessoa { idade: 20 + 3, nome: "Mo" ++ "nique" }.idade
-```
-
-**Saída esperada:** `23`.
-
-Os campos são associados pelo nome. A ordem pode variar, e o valor de um campo pode ser uma expressão bem tipada.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/registros/campos-fora-de-ordem.lf1).
-
-### Armazenar um registro dentro de outro registro
+### 4. Armazenar um registro dentro de outro registro
 
 ```text
 let record Endereco { cidade: String } in
@@ -332,25 +270,7 @@ O campo endereco possui o tipo nominal Endereco. O acesso encadeado encontra a c
 
 [Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/registros/registro-aninhado.lf1).
 
-### Declarar um campo como lista de registros
-
-```text
-let record Pessoa { nome: String, idade: Int } in
-let record Turma { alunos: [Pessoa] } in
-let var turma = Turma { alunos: [
-    Pessoa { nome: "Monique", idade: 23 },
-    Pessoa { nome: "Bruno", idade: 25 }
-] } in
-head(turma.alunos).nome
-```
-
-**Saída esperada:** `"Monique"`.
-
-O tipo [Pessoa] permite uma lista de registros no campo alunos. head devolve uma Pessoa, e .nome devolve uma String.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/registros/turma-com-alunos.lf1).
-
-### Reutilizar uma função com listas de tipos diferentes
+### 5. Reutilizar uma função com listas de tipos diferentes
 
 ```text
 let fun primeiro xs = head(xs) in
@@ -366,11 +286,11 @@ Cada chamada instancia o tipo da função: uma recebe [Boolean] e outra recebe [
 [Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/listas/funcao-primeiro-generica.lf1).
 
 <a id="erros-de-tipo"></a>
-## Erros de tipo — rejeitados antes da avaliação
+## Erros de tipo — exemplos 6 a 8
 
-Estes programas têm uma construção sintática reconhecida, mas violam uma regra de tipos. A checagem os rejeita antes da execução, inclusive quando a expressão inválida está em um ramo que não seria escolhido por `if`.
+O parser reconhece estes programas, mas a checagem rejeita os tipos antes da avaliação.
 
-### Elementos incompatíveis na mesma lista
+### 6. Elementos incompatíveis na mesma lista
 
 ```text
 [1, true]
@@ -378,7 +298,7 @@ Estes programas têm uma construção sintática reconhecida, mas violam uma reg
 
 **Diagnóstico esperado:** `Todos os elementos da lista devem ter o mesmo tipo.` Int e Boolean não podem ser elementos da mesma lista homogênea.
 
-### Tipo incompatível em um campo de lista
+### 7. Tipo incompatível em um campo de lista
 
 ```text
 let record Pessoa { notas: [Int] } in
@@ -387,173 +307,24 @@ Pessoa { notas: [true] }
 
 **Diagnóstico esperado:** tipo incompatível no campo `notas`. O campo foi declarado como [Int], mas recebeu [Boolean].
 
-### Campo inexistente no acesso
-
-```text
-let record Pessoa { idade: Int } in
-Pessoa { idade: 23 }.nome
-```
-
-**Diagnóstico esperado:** `Campo inexistente 'nome' em Pessoa`. Ter um registro como alvo não basta: o campo também precisa existir.
-
-### Campo obrigatório ausente
-
-```text
-let record Pessoa { nome: String, idade: Int } in
-Pessoa { nome: "Monique" }
-```
-
-**Diagnóstico esperado:** `Campos incorretos de Pessoa: esperados [nome, idade], recebidos [nome]`.
-
-A construção precisa fornecer exatamente os campos declarados; idade não foi informado.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/campo-obrigatorio-ausente.lf1).
-
-### Campo que não pertence à declaração
-
-```text
-let record Pessoa { idade: Int } in
-Pessoa { idade: 23, ativa: true }
-```
-
-**Diagnóstico esperado:** `Campos incorretos de Pessoa: esperados [idade], recebidos [idade, ativa]`.
-
-O campo ativa não foi declarado no tipo Pessoa.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/campo-extra.lf1).
-
-### Construção de um registro não declarado
-
-```text
-Pessoa { idade: 23 }
-```
-
-**Diagnóstico esperado:** `Tipo de registro não declarado: Pessoa`.
-
-A declaração let record precisa estar visível no escopo da construção.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/tipo-registro-nao-declarado.lf1).
-
-### Tipo de um campo sem declaração
-
-```text
-let record Pessoa { endereco: Endereco } in
-1
-```
-
-**Diagnóstico esperado:** `Tipo de registro não declarado: Endereco`.
-
-Mesmo sem construir uma Pessoa, sua declaração precisa referenciar um tipo Endereco conhecido.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/tipo-de-campo-nao-declarado.lf1).
-
-### Registros diferentes dentro da mesma lista
-
-```text
-let record Pessoa { idade: Int } in
-let record Aluno { idade: Int } in
-[Pessoa { idade: 23 }, Aluno { idade: 25 }]
-```
-
-**Diagnóstico esperado:** `Todos os elementos da lista devem ter o mesmo tipo.`.
-
-Pessoa e Aluno são tipos nominais distintos, mesmo com campos iguais. Seus valores não formam uma lista homogênea.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/registros-nominais-distintos.lf1).
-
-### head aplicado a um inteiro
+### 8. head aplicado a um inteiro
 
 ```text
 head(10)
 ```
 
-**Diagnóstico esperado:** `Operação de lista exige uma lista.`.
+**Diagnóstico esperado:** `Operação de lista exige uma lista.`
 
 A existência do tipo Int não torna a operação válida: head exige um argumento cujo tipo seja lista.
 
 [Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/head-nao-lista.lf1).
 
-### tail aplicado a um booleano
-
-```text
-tail(true)
-```
-
-**Diagnóstico esperado:** `Operação de lista exige uma lista.`.
-
-tail exige uma lista; receber um Boolean viola a regra da operação.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/tail-nao-lista.lf1).
-
-### isEmpty aplicado a uma String
-
-```text
-isEmpty("abc")
-```
-
-**Diagnóstico esperado:** `Operação de lista exige uma lista.`.
-
-Na extensão, String e lista são tipos diferentes. isEmpty só aceita listas.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/isempty-nao-lista.lf1).
-
-### Argumento incompatível em uma chamada de função
-
-```text
-let fun primeiro xs = head(xs) in
-primeiro(10)
-```
-
-**Diagnóstico esperado:** `função 'primeiro': Tipo incompatível no argumento 1: esperado [?], recebido INTEIRO`.
-
-O corpo de primeiro exige que xs seja lista. A chamada com 10 é rejeitada antes de avaliar a função.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/funcao-primeiro-argumento-invalido.lf1).
-
-### Ramos de if com listas de tipos incompatíveis
-
-```text
-if true then [1, 2] else [false]
-```
-
-**Diagnóstico esperado:** `erro de tipos!`.
-
-Os dois ramos precisam produzir tipos compatíveis, mesmo quando a condição é true. [Int] e [Boolean] são incompatíveis.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/ramos-com-listas-incompativeis.lf1).
-
 <a id="erros-de-sintaxe"></a>
-## Erros de sintaxe — rejeitados pelo parser
+## Erro de sintaxe — exemplo 9
 
-Nestes casos, o parser não conclui a construção da expressão. Por isso, o programa não chega a `checaTipo` nem à avaliação.
+O parser rejeita a declaração; o programa não chega à checagem de tipos.
 
-### Nome de campo repetido na declaração
-
-```text
-let record Pessoa { idade: Int, idade: Int } in
-1
-```
-
-**Diagnóstico esperado:** `Linha 1, coluna 33: campo repetido: idade`.
-
-O parser impede duas declarações do mesmo campo no mesmo registro.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/declaracao-campo-repetido.lf1).
-
-### Nome de campo repetido na construção
-
-```text
-let record Pessoa { idade: Int } in
-Pessoa { idade: 23, idade: 25 }
-```
-
-**Diagnóstico esperado:** `Linha 2, coluna 21: campo repetido: idade`.
-
-O parser impede informar duas vezes um mesmo campo na construção do registro.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/construcao-campo-repetido.lf1).
-
-### Lista sem o colchete de fechamento
+### 9. Lista sem o colchete de fechamento
 
 ```text
 [1, 2
@@ -561,16 +332,14 @@ O parser impede informar duas vezes um mesmo campo na construção do registro.
 
 **Diagnóstico esperado:** `Encountered` (início da mensagem do parser, em inglês).
 
-A análise sintática não consegue concluir a lista. O programa não chega à checagem de tipos.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/lista-sem-fechamento.lf1).
+A lista não termina com `]`. O parser não conclui a expressão, então o programa não chega à checagem de tipos.
 
 <a id="erros-de-execucao"></a>
-## Erros de execução — tipo aceito, operação inválida para o valor
+## Erro de execução — exemplo 10
 
-A checagem conhece os tipos, mas não calcula previamente o conteúdo de todas as listas. As operações `head` e `tail` desta extensão exigem uma lista não vazia durante a avaliação. Para evitar esses erros, teste `isEmpty` antes de acessar a lista.
+O tipo do argumento é válido, mas a avaliação não consegue realizar a operação sobre o valor recebido.
 
-### head aplicado a uma lista vazia
+### 10. head aplicado a uma lista vazia
 
 ```text
 head([])
@@ -578,25 +347,6 @@ head([])
 
 **Diagnóstico esperado:** `head não pode ser aplicado a uma lista vazia.` O argumento é uma lista válida em termos de tipo, mas não existe primeiro elemento.
 
-### tail aplicado a uma lista vazia
+Para evitar esse erro, use `isEmpty` para decidir se é seguro chamar `head` ou `tail`. A checagem de tipos não calcula antecipadamente o conteúdo de todas as listas.
 
-```text
-tail([])
-```
-
-**Diagnóstico esperado:** `tail não pode ser aplicado a uma lista vazia.`.
-
-A checagem aceita o tipo lista. A avaliação falha porque a operação tail da extensão exige uma lista não vazia.
-
-[Abrir este exemplo no repositório](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/examples/erros/tail-vazia.lf1).
-
-### Evitar o erro com isEmpty
-
-```text
-let var numeros = [] in
-if isEmpty(numeros) then 0 else head(numeros)
-```
-
-**Saída esperada:** `0`. A checagem aceita os tipos dos dois ramos, mas a avaliação executa apenas o ramo escolhido. Assim, `head(numeros)` não é avaliado quando a lista está vazia.
-
-Os arquivos de exemplos e seus resultados são verificados nos testes de integração dos dois parsers e pela API JavaScript usada pela IDE. Consulte também o [guia de execução e testes](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/README.md).
+Os demais cenários permanecem nos arquivos e nos testes do repositório. Consulte o [guia de execução e testes](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/README.md).
