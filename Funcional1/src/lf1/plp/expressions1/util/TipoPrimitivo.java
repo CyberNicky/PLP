@@ -1,7 +1,5 @@
 package lf1.plp.expressions1.util;
 
-import lf1.plp.functional1.util.Inferencia;
-
 /**
  * Enum que representa os possiveis tipos primitivo de uma expressao.
  * Objetos desta classe sao imutaveis, portanto as vezes as instancias sao
@@ -56,7 +54,15 @@ public enum TipoPrimitivo implements Tipo {
 	 * @see lf1.plp.expressions1.util.Tipo#eIgual(lf1.plp.expressions1.util.Tipo)
 	 */
 	public boolean eIgual(Tipo tipo) {
-		return Inferencia.unificar(this, tipo);
+		boolean ret = false;
+		if (eValido() && tipo != null) {
+			if (tipo instanceof TipoPrimitivo) {
+				ret = this.nome.equals(tipo.getNome());
+			} else {
+				ret = tipo.eIgual(this);
+			}
+		}
+		return ret;
 	}
 
 	/* (non-Javadoc)

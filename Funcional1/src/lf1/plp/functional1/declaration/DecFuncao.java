@@ -3,6 +3,9 @@ package lf1.plp.functional1.declaration;
 import static lf1.plp.expressions1.util.ToStringProvider.listToString;
 
 import java.util.List;
+import java.util.ArrayList;
+import lf1.plp.functional1.util.TipoFuncao;
+import lf1.plp.functional1.util.TipoPolimorfico;
 
 import lf1.plp.expressions1.util.Tipo;
 import lf1.plp.expressions2.expression.Expressao;
@@ -78,10 +81,17 @@ public class DecFuncao implements DeclaracaoFuncional {
 	 *                mesmo bloco do ambiente.
 	 */
 	public boolean checaTipo(AmbienteCompilacao ambiente)
-			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		funcao.inferir(ambiente, id);
-		return true;
-	}
+            throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+        ambiente.incrementa();
+        try {
+            // Preparação original da LF1: tipos dos parâmetros e vínculo recursivo.
+            List<Tipo> params = new ArrayList<Tipo>(getAridade());
+            for (int i = 0; i < getAridade(); i++) params.add(new TipoPolimorfico());
+            TipoFuncao tipo = new TipoFuncao(params, new TipoPolimorfico());
+            ambiente.map(id, tipo);
+            return funcao.checaTipo(ambiente, tipo);
+        } finally { ambiente.restaura(); }
+    }
 
 	/**
 	 * Retorna os tipos possiveis da fun��o declarada.

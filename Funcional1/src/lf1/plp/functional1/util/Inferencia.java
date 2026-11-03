@@ -57,14 +57,8 @@ public final class Inferencia {
         if (b instanceof TipoPolimorfico) return vincular((TipoPolimorfico) b, a);
         if (a instanceof TipoLista && b instanceof TipoLista)
             return unificar(((TipoLista) a).elemento(), ((TipoLista) b).elemento());
-        if (a instanceof TipoFuncao && b instanceof TipoFuncao) {
-            TipoFuncao fa = (TipoFuncao) a;
-            TipoFuncao fb = (TipoFuncao) b;
-            if (fa.getDominio().size() != fb.getDominio().size()) return false;
-            for (int i = 0; i < fa.getDominio().size(); i++)
-                if (!unificar(fa.getDominio().get(i), fb.getDominio().get(i))) return false;
-            return unificar(fa.getImagem(), fb.getImagem());
-        }
+        // A comparação estrutural de funções continua em TipoFuncao, como na LF1.
+        if (a instanceof TipoFuncao && b instanceof TipoFuncao) return a.eIgual(b);
         // Primitivos são enums; registros têm identidade nominal por declaração.
         return false;
     }

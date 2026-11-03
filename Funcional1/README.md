@@ -80,6 +80,8 @@ ValorConcreto ::= ValorInteiro | ValorBooleano | ValorString | ValorLista | Valo
 
 ## Decisões e verificação de tipos
 
+A [revisão da checagem original](docs/REVISAO_CHECAGEM.md) registra os métodos reaproveitados da LF1, as simplificações aplicadas e as adaptações mantidas para tipos compostos.
+
 - [ExpLista](src/lf1/plp/functional1/extension/ExpLista.java) verifica as expressões dos elementos e unifica seus tipos. A lista vazia começa com um tipo de elemento ainda não determinado, que pode ser definido pelo contexto.
 - [ExpRegistro](src/lf1/plp/functional1/extension/ExpRegistro.java) consulta a declaração do registro, compara os nomes dos campos e verifica o tipo de cada expressão com o tipo declarado. A ordem dos campos pode variar.
 - [ExpCampo](src/lf1/plp/functional1/extension/ExpCampo.java) exige um registro e um campo existente. [ExpOperacaoLista](src/lf1/plp/functional1/extension/ExpOperacaoLista.java) exige uma lista: `head` tem o tipo do elemento; `tail` tem o tipo da lista; `isEmpty` retorna booleano.

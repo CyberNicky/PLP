@@ -1,6 +1,7 @@
 package lf1.plp.functional1.util;
 
 import java.util.*;
+import static lf1.plp.expressions1.util.ToStringProvider.listToString;
 import lf1.plp.expressions1.util.Tipo;
 import lf1.plp.expressions2.expression.Expressao;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
@@ -34,13 +35,39 @@ public class TipoFuncao implements Tipo {
         return new TipoFuncao(params, Inferencia.copiar(imagem, quantificadas, copias));
     }
 
-    public String getNome() { return dominio + " -> " + imagem; }
+    public String getNome() {
+		return String.format("(%s) -> %s", listToString(dominio, " x"), imagem);
+	}
     public String toString() { return getNome(); }
     public boolean eBooleano() { return false; }
     public boolean eInteiro() { return false; }
     public boolean eString() { return false; }
-    public boolean eValido() { return true; }
-    public boolean eIgual(Tipo outro) { return Inferencia.unificar(this, outro); }
+    public boolean eValido() {
+		boolean ret = dominio != null;
+		for (Tipo t : this.dominio) {
+			ret &= t.eValido();
+		}
+		ret &= imagem != null && imagem.eValido();
+		return ret;
+	}
+    public boolean eIgual(Tipo tipo) {
+		boolean ret = true;
+		if (tipo instanceof TipoPolimorfico)
+			return tipo.eIgual(this);
+
+		if (tipo instanceof TipoFuncao) {
+			TipoFuncao tipoFuncao = (TipoFuncao) tipo;
+			if (this.dominio.size() != tipoFuncao.dominio.size())
+				return false;
+			Iterator<Tipo> it = this.dominio.iterator();
+			for (Tipo t : tipoFuncao.dominio) {
+				ret &= t.eIgual(it.next());
+			}
+			return ret && this.imagem.eIgual(tipoFuncao.imagem);
+		}
+
+		return false;
+	}
     public Tipo intersecao(Tipo outro) { return eIgual(outro) ? this : null; }
 
     private Tipo aplicar(AmbienteCompilacao amb, List<? extends Expressao> argumentos) {

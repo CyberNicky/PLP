@@ -88,6 +88,8 @@ A API da IDE chama a checagem e executa o programa apenas se ela aprovar: [ver i
 
 O método procura a declaração do registro no ambiente, exige os mesmos nomes de campos, verifica cada expressão recebida e compara seu tipo com o tipo declarado usando `eIgual`. Por exemplo, um campo `notas: [Int]` aceita `[8, 10]` e rejeita `[true]`. A comparação usa os nomes dos campos, permitindo informá-los em outra ordem.
 
+A verificação de operadores, condicionais e aplicações reaproveita a LF1. A revisão também retomou o fluxo original de `checaTipo` em `DecFuncao` e `DefFuncao`; os apoios de inferência para tipos compostos continuam necessários. [Ver a revisão e os testes de compatibilidade](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/docs/REVISAO_CHECAGEM.md).
+
 ### Onde ficam as outras regras
 
 | Construção | Regra verificada | Implementação |
