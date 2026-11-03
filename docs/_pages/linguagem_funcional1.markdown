@@ -322,7 +322,7 @@ A existência do tipo Int não torna a operação válida: head exige um argumen
 <a id="erros-de-sintaxe"></a>
 ## Erro de sintaxe — exemplo 9
 
-O parser rejeita a declaração; o programa não chega à checagem de tipos.
+O parser rejeita a expressão incompleta; o programa não chega à checagem de tipos.
 
 ### 9. Lista sem o colchete de fechamento
 
