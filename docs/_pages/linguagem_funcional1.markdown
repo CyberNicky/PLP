@@ -18,6 +18,15 @@ order: 3
 
 Para testar, abra a [IDE web]({{ site.baseurl }}/ide/), selecione **Func1**, cole um programa completo na célula e pressione **Shift + Enter** ou clique em **Run**. As declarações de um exemplo precisam estar na mesma célula que seu uso. Cada exemplo abaixo informa o resultado ou diagnóstico esperado.
 
+<style>
+/* Mantém o código de checaTipo legível também em telas estreitas. */
+.language-java pre,
+.language-java pre code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+</style>
+
 <a id="checa-tipo"></a>
 ## Checagem de tipos — checaTipo visível
 
