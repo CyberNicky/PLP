@@ -45,7 +45,7 @@ A API da IDE chama a checagem e executa o programa apenas se ela aprovar: [ver i
 [ExpLista.checaTipo](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/src/lf1/plp/functional1/extension/ExpLista.java#L17-L25) — código atual da implementação:
 
 ```java
-@Override public boolean checaTipo(AmbienteCompilacao amb) {
+public boolean checaTipo(AmbienteCompilacao amb) {
     Tipo elemento = new TipoPolimorfico();
     for (Expressao exp : elementos) {
         if (!exp.checaTipo(amb)) return false;
@@ -66,7 +66,7 @@ A API da IDE chama a checagem e executa o programa apenas se ela aprovar: [ver i
 [ExpRegistro.checaTipo](https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}/blob/master/Funcional1/src/lf1/plp/functional1/extension/ExpRegistro.java#L22-L39) — código atual da implementação:
 
 ```java
-@Override public boolean checaTipo(AmbienteCompilacao amb) {
+public boolean checaTipo(AmbienteCompilacao amb) {
     TipoRegistro tipo;
     try { tipo = (TipoRegistro) amb.get(TipoRegistro.chave(nome)); }
     catch (VariavelNaoDeclaradaException e) { throw new ErroExtensao("Tipo de registro não declarado: " + nome); }

@@ -19,7 +19,7 @@ public class ErroExtensao extends RuntimeException {
     }
     public int getLinha() { return linha; }
     public int getColuna() { return coluna; }
-    @Override public String getMessage() {
+    public String getMessage() {
         return (linha == 0 ? "" : "linha " + linha + ", coluna " + coluna + ": ")
             + (contexto == null ? "" : contexto + ": ") + super.getMessage();
     }

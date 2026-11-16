@@ -45,6 +45,14 @@ A revisão utilizou cópias temporárias para comparar alternativas:
 
 Os cinco novos testes em `RevisaoCompatibilidadeTest` verificam essa fronteira: rejeição de colisões por nome, retorno booleano nas duas classes de função, restauração dos ambientes após erros da extensão e rejeição de um retorno recursivo com tipo infinito. A suíte passa a ter 85 testes Java: 81 no módulo Funcional1 e 4 no WebDebug.
 
+## Simplificação das expressões e análise dos diagnósticos
+
+As classes `ExpLista`, `ExpRegistro`, `ExpCampo`, `ExpOperacaoLista` e `ExpDeclaracaoRegistro` implementam diretamente `Expressao`. A classe intermediária foi removida, e cada expressão declara `reduzir` com o mesmo comportamento que herdava: devolver seu clone. As anotações `@Override` do pacote da extensão foram retiradas. Os corpos dos métodos `checaTipo` foram preservados.
+
+`ErroExtensao` continua sendo uma exceção, e não um resultado booleano. Quando uma checagem lança essa exceção, ela termina sem retornar `true` ou `false`. `ExpressaoLocalizada` acrescenta a localização e relança o diagnóstico; também pode transformar um retorno `false` da expressão envolvida em um diagnóstico localizado. Na API da IDE, o tratamento externo devolve um resultado com sucesso `false` e a mensagem do erro. Esse indicador da API não equivale a um retorno `false` do método `checaTipo`.
+
+Esta análise não altera a checagem nem converte suas exceções em retornos booleanos. Os erros de execução, como `head([])`, permanecem distintos: a checagem pode aprovar a expressão, e a falha surgir somente na avaliação.
+
 ## Comandos de validação
 
 Na raiz de `PLP`, com JDK 21:

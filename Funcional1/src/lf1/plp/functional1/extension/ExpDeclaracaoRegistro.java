@@ -8,7 +8,7 @@ import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.AmbienteExecucao;
 
 /** Declara o tipo em um escopo próprio, sem alterar declarações simultâneas da LF1. */
-public class ExpDeclaracaoRegistro extends ExpressaoExtensao {
+public class ExpDeclaracaoRegistro implements Expressao {
     private final TipoRegistro tipo;
     private final Expressao corpo;
     public ExpDeclaracaoRegistro(TipoRegistro tipo, Expressao corpo) {
@@ -16,7 +16,7 @@ public class ExpDeclaracaoRegistro extends ExpressaoExtensao {
         this.corpo = corpo;
     }
     protected void aoAbrirEscopo(AmbienteCompilacao amb) {}
-    @Override public boolean checaTipo(AmbienteCompilacao amb) {
+    public boolean checaTipo(AmbienteCompilacao amb) {
         amb.incrementa();
         try {
             aoAbrirEscopo(amb);
@@ -41,6 +41,7 @@ public class ExpDeclaracaoRegistro extends ExpressaoExtensao {
             return corpo.avaliar(amb);
         } finally { amb.restaura(); }
     }
+    public Expressao reduzir(AmbienteExecucao amb) { return clone(); }
     public ExpDeclaracaoRegistro clone() { return new ExpDeclaracaoRegistro(tipo, corpo.clone()); }
 
     /** Metadado interno; não é um valor acessível por identificadores do programa. */

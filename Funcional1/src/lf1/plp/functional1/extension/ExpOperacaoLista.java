@@ -9,7 +9,7 @@ import lf1.plp.expressions2.expression.ValorBooleano;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.AmbienteExecucao;
 
-public final class ExpOperacaoLista extends ExpressaoExtensao {
+public final class ExpOperacaoLista implements Expressao {
     public enum Operacao { HEAD, TAIL, IS_EMPTY }
     private final Operacao operacao;
     private final Expressao argumento;
@@ -17,7 +17,7 @@ public final class ExpOperacaoLista extends ExpressaoExtensao {
         this.operacao = operacao;
         this.argumento = argumento;
     }
-    @Override public boolean checaTipo(AmbienteCompilacao amb) {
+    public boolean checaTipo(AmbienteCompilacao amb) {
         return argumento.checaTipo(amb) && Inferencia.lista(argumento.getTipo(amb)) != null;
     }
     public Tipo getTipo(AmbienteCompilacao amb) {
@@ -38,5 +38,6 @@ public final class ExpOperacaoLista extends ExpressaoExtensao {
             default: throw new IllegalStateException("Operação desconhecida");
         }
     }
+    public Expressao reduzir(AmbienteExecucao amb) { return clone(); }
     public ExpOperacaoLista clone() { return new ExpOperacaoLista(operacao, argumento.clone()); }
 }

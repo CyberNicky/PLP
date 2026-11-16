@@ -10,11 +10,11 @@ import lf1.plp.expressions2.expression.Expressao;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.AmbienteExecucao;
 
-public final class ExpLista extends ExpressaoExtensao {
+public final class ExpLista implements Expressao {
     private final List<Expressao> elementos;
     public ExpLista(List<Expressao> elementos) { this.elementos = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(elementos)); }
     /** Verifica cada expressão e unifica os tipos dos elementos, sem avaliar valores. */
-    @Override public boolean checaTipo(AmbienteCompilacao amb) {
+    public boolean checaTipo(AmbienteCompilacao amb) {
         Tipo elemento = new TipoPolimorfico();
         for (Expressao exp : elementos) {
             if (!exp.checaTipo(amb)) return false;
@@ -43,5 +43,6 @@ public final class ExpLista extends ExpressaoExtensao {
         }
         return new ValorLista(new TipoLista(elemento), valores);
     }
+    public Expressao reduzir(AmbienteExecucao amb) { return clone(); }
     public ExpLista clone() { return new ExpLista(elementos.stream().map(Expressao::clone).collect(java.util.stream.Collectors.toList())); }
 }

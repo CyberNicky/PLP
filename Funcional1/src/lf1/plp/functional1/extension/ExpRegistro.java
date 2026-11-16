@@ -10,7 +10,7 @@ import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.AmbienteExecucao;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
-public final class ExpRegistro extends ExpressaoExtensao {
+public final class ExpRegistro implements Expressao {
     private final String nome;
     private final Map<String, Expressao> campos;
     // Ligação nominal resolvida no escopo da declaração da expressão.
@@ -19,7 +19,7 @@ public final class ExpRegistro extends ExpressaoExtensao {
         this.nome = nome;
         this.campos = Collections.unmodifiableMap(new LinkedHashMap<>(campos));
     }
-    @Override public boolean checaTipo(AmbienteCompilacao amb) {
+    public boolean checaTipo(AmbienteCompilacao amb) {
         TipoRegistro tipo;
         try { tipo = (TipoRegistro) amb.get(TipoRegistro.chave(nome)); }
         catch (VariavelNaoDeclaradaException e) { throw new ErroExtensao("Tipo de registro não declarado: " + nome); }
@@ -48,6 +48,7 @@ public final class ExpRegistro extends ExpressaoExtensao {
         campos.forEach((campo, exp) -> valores.put(campo, exp.avaliar(amb)));
         return new ValorRegistro(tipo, valores);
     }
+    public Expressao reduzir(AmbienteExecucao amb) { return clone(); }
     public ExpRegistro clone() {
         Map<String, Expressao> copia = new LinkedHashMap<>();
         campos.forEach((campo, exp) -> copia.put(campo, exp.clone()));
